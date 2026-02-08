@@ -4,11 +4,11 @@ class StaticSignClassifier(nn.Module):
     '''
     Simple Classifier used for signs with no movement involved, such as much letters.
     Args:
-        num_features - Takes in the number of features fed into the neural network
+        num_features - Number of features input into the neural network (default 21 points x 2 hands x 2 cords = 84)
         num_cateogries - The number of categories that the hand signal could represent
         dropout - Allows the node dropout rate to be configured
     '''
-    def __init__(self, num_features, num_categories, dropout = 0.3):
+    def __init__(self,num_categories, num_features = 84, dropout = 0.3):
         super().__init__()
         # Sets up the neural network architecture
         self.model = nn.Sequential(nn.Linear(num_features, 128), nn.ReLU(), nn.Dropout(dropout),

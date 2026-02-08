@@ -1,9 +1,12 @@
 import torch
 import torch.nn as nn
+from sklearn.model_selection import train_test_split
 from src.models.static_sign_classifier import StaticSignClassifier
+# Import proper file when proper dataset
+from src.data.examples.static_demo_tensor import generate_example_dataset
 
 
-def main(n_epochs = 20, n_features = 84, n_categories = 5, lr=1e-3):
+def main(n_epochs = 20, n_features = 84, n_categories = 6, lr=1e-3, test_size=0.2):
     """Train and save a `StaticSignClassifier`.
 
     Args:
@@ -12,24 +15,24 @@ def main(n_epochs = 20, n_features = 84, n_categories = 5, lr=1e-3):
         n_categories: Number of output classes
         lr: Learning rate for Adam
     """
-    model = StaticSignClassifier(n_features, n_categories)
+    model = StaticSignClassifier(n_categories, num_features=n_features)
     optimiser = torch.optim.Adam(model.parameters(), lr=lr)
     loss = nn.CrossEntropyLoss()
 
-    X = []
-    y = []
-    X_test = []
-    y_test = []
-
-    # Where the trained mode is saved.
+    # Change depending on the dataset loaded
+    X, y = generate_example_dataset(n_categories)
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=test_size,
+                                                                            shuffle=True, stratify=y)
+    
+    # Where the trained mode is saved
     save_path = "src/models/saved_models/static_sign.pth"
 
     for epoch in range(1, n_epochs + 1):
         model.train()
         optimiser.zero_grad()
         # Forward pass
-        predictions = model(X)
-        CEL = loss(predictions, y)
+        predictions = model(X_train)
+        CEL = loss(predictions, y_train)
         CEL.backward()
         optimiser.step()
 
