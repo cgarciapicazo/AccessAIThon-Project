@@ -7,4 +7,4 @@ def img_to_HLResult(path):
     detector = python.vision.HandLandmarker.create_from_options(options)
     image = mp.Image.create_from_file(path)
     detection_result = detector.detect(image)
-    return detection_result[0]
+    return detection_result

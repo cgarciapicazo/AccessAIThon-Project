@@ -8,7 +8,7 @@ class StaticSignClassifier(nn.Module):
         num_cateogries - The number of categories that the hand signal could represent
         dropout - Allows the node dropout rate to be configured
     '''
-    def __init__(self,num_categories, num_features = 84, dropout = 0.3):
+    def __init__(self, num_categories, num_features = 84, dropout = 0.3):
         super().__init__()
         # Sets up the neural network architecture
         self.model = nn.Sequential(nn.Linear(num_features, 128), nn.ReLU(), nn.Dropout(dropout),

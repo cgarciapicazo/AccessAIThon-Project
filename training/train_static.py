@@ -1,9 +1,9 @@
 import torch
 import torch.nn as nn
 from sklearn.model_selection import train_test_split
-from src.models.static_sign_classifier import StaticSignClassifier
+from src.models.static_network import StaticSignClassifier
 # Import proper file when proper dataset
-from src.data.examples.static_demo_tensor import generate_example_dataset
+from src.data.examples.test_datasets import generate_static
 
 
 def main(n_epochs = 20, n_features = 84, n_categories = 6, lr=1e-3, test_size=0.2):
@@ -20,10 +20,13 @@ def main(n_epochs = 20, n_features = 84, n_categories = 6, lr=1e-3, test_size=0.
     loss = nn.CrossEntropyLoss()
 
     # Change depending on the dataset loaded
-    X, y = generate_example_dataset(n_categories)
+    X, y = generate_static(n_categories)
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=test_size,
                                                                             shuffle=True, stratify=y)
     
+    CLASSES = ["C", "A", "Hello", "How are you?", "Good", "Bad"]
+    CLASSES_TO_INDEX = {label : i for i, label in enumerate(CLASSES)}
+
     # Where the trained mode is saved
     save_path = "src/models/saved_models/static_sign.pth"
 
