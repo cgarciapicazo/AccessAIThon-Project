@@ -8,3 +8,12 @@ def img_to_HLResult(path):
     image = mp.Image.create_from_file(path)
     detection_result = detector.detect(image)
     return detection_result
+
+from tensor_manipulation import hlresult_to_tensor84
+
+res = img_to_HLResult("src/data/images/photo8.jpg")
+
+tensor84 = hlresult_to_tensor84(res)
+
+print("Tensor shape:", tensor84.shape)
+print(tensor84)
