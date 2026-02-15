@@ -1,16 +1,24 @@
 import torch
+import numpy as np
+from math import sqrt
 
-def hlresult_to_tensor84(res, wrist_relative=True):
+def hlresult_to_tensor84(res, wrist_relative=True, scale_relative=True):
+    epsilon =  1e-6 # Prevents division by zero when scaling the hand
     features = torch.zeros(84, dtype=torch.float32)
 
     if res is None or not res.hand_landmarks:
         return features
 
+    ##
     def write_hand(start_index, landmarks):
         coords = []
 
         wrist_x = landmarks[0].x
         wrist_y = landmarks[0].y
+
+        ## Scales the hand cordinates relative to the distance between palm borders
+        s= sqrt( ((landmarks[5].x - landmarks[17].x) ** 2) +
+                        ((landmarks[5].y - landmarks[17].y) ** 2))
 
         for lm in landmarks:
             x = lm.x
@@ -20,11 +28,16 @@ def hlresult_to_tensor84(res, wrist_relative=True):
                 x -= wrist_x
                 y -= wrist_y
 
+            if scale_relative:
+                x /= s + epsilon ## Adding epsilon to prevent division by zero
+                y /= s + epsilon
+
             coords.append(x)
             coords.append(y)
 
         hand_tensor = torch.tensor(coords, dtype=torch.float32)
         features[start_index:start_index + 42] = hand_tensor
+    ##
 
     for i, landmarks in enumerate(res.hand_landmarks):
 
