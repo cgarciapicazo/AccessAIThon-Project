@@ -3,7 +3,7 @@ import torch.nn as nn
 import os
 from sklearn.model_selection import train_test_split
 from src.models.static_network import StaticSignClassifier
-from src.preprocessing.image_hand_detector import img_to_HLResult, create_detector
+from src.preprocessing.hand_detector import img_to_HLResult, create_detector
 from src.preprocessing.tensor_manipulation import hlresult_to_tensor84
 
 # We used our own images of hand signals to train the static model
@@ -32,12 +32,18 @@ def main(n_steps = 200000, n_features = 84, lr=1e-3, test_size=0.2, batch_size=2
             classes.remove('.DS_Store')
         except Exception:
             pass
+        ## Adds the None class when no hands are present
+        classes.append("None")
+        n_none_samples = 5000
+        none_index = sorted(classes).index("None")
+        X.extend([torch.zeros(n_features, dtype=torch.float32) for _ in range(n_none_samples)])
+        y.extend([none_index] * n_none_samples)
         classes.sort()
         n_categories = len(classes)
         CLASSES_TO_INDEX = {label : i for i, label in enumerate(classes)}
 
         # Loads all the images and convert them into X and y tensors with the appropiate values
-        dir_count = 0
+        dir_count = 1
         for dir in os.listdir(data_path):
             if dir != '.DS_Store': # May read some unwanted files that are not a class
                 class_index = CLASSES_TO_INDEX[dir]

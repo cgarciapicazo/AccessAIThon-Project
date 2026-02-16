@@ -1,5 +1,12 @@
 import mediapipe as mp
 from mediapipe.tasks import python
+import cv2
+
+def frame_to_HLResult(frame, detector):
+    rgb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+    image = mp.Image(image_format=mp.ImageFormat.SRGB, data=rgb_frame)
+    detection_result = detector.detect(image)
+    return detection_result
 
 def img_to_HLResult(path, detector):
     try:

@@ -1,5 +1,4 @@
 import torch
-import numpy as np
 from math import sqrt
 
 def hlresult_to_tensor84(res, wrist_relative=True, scale_relative=True):
