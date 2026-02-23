@@ -7,7 +7,6 @@ from src.preprocessing.hand_detector import create_detector, frame_to_HLResult
 from src.preprocessing.tensor_manipulation import hlresult_to_tensor84
 from src.utils.ema import probEMA
 
-# If you're using the TTSService file we made earlier
 from src.postprocessing.text_to_speech import TTSService
 
 
