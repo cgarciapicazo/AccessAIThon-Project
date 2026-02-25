@@ -11,6 +11,7 @@ Current categories include british sign language numbers from 0 to 10 and static
 ### 1) Install dependencies
 ```bash
 pip install -r requirements.txt
+```
 
 ### 2) Run the main program (webcam inference)
 ```bash
